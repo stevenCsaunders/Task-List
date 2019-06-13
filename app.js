@@ -59,5 +59,21 @@ const addTask = (e) => {
 }
 
 
+//REMOVE TASK FUNCTION
+const removeTask = (e) => {
+  if(e.target.parentElement.classList.contains('delete-item')){
+    if(confirm('Are you sure you want to delte this task?')){e.target.parentElement.parentElement.remove();
+    }
+  }
+}
+
+//CLEAR ALL TASKS FUNCTION
+const clearTasks = (e) => {
+  while(taskList.firstChild){
+    taskList.removeChild(taskList.firstChild);
+  }
+}
+
+
 
 loadEventListeners();
