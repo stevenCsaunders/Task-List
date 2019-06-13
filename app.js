@@ -20,3 +20,44 @@ const loadEventListeners = () => {
   //FILTER TASKS
   filter.addEventListener('keyup', filterTasks)
 }
+
+
+//ADD TASK FUNCTION
+const addTask = (e) => {
+  if(taskInput.value === ''){
+    alert('Add a task!');
+  }
+
+  //CREATE LI ELEMENT
+  const li = document.createElement('li');
+
+  //ADD CLASS TO LI ELEMENT ADDED
+  li.className = 'collection-item';
+
+  //CREATE TEXT NODE AND APPEND TO LI
+  li.appendChild(document.createTextNode(taskInput.value));
+
+  //CREATE NEW LINK ELEMENT
+  const link = document.createElement('a');
+
+  //ADD CLASS TO LINK
+  link.className = 'delete-item secondary-content';
+
+  //ADD ICON FOR DELETE TASK
+  link.innerHTML = '<i class="fa fa-remove"></i>'
+
+  //APPEND TO LI ELEMENT
+  li.appendChild(link); 
+
+  //APPEND NEW LI ELEMENT TO UL
+  taskList.appendChild(li);
+
+  //CLEAR INPUT
+  taskInput.value = '';
+  
+  e.preventDefault();
+}
+
+
+
+loadEventListeners();
