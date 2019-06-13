@@ -8,6 +8,9 @@ const filter = document.getElementById('filter');
 
 //LOAD ALL EVENT LISTENERES
 const loadEventListeners = () => {
+  //DOM LOAD EVENT
+  document.addEventListener('DOMContentLoaded', getTasks)
+  
   //ADD TASK EVENT
   form.addEventListener('submit', addTask)
 
@@ -19,6 +22,36 @@ const loadEventListeners = () => {
 
   //FILTER TASKS
   filter.addEventListener('keyup', filterTasks)
+}
+
+//GET TASKS FROM LOCAL STORAGE
+const getTasks = () => {
+  let tasks;
+
+  if(localStorage.getItem('tasks') === null){
+    tasks = [];
+  } else {
+    tasks = JSON.parse(localStorage.getItem('tasks'));
+  }
+
+  tasks.forEach((task) => {
+
+  const li = document.createElement('li');
+ 
+  li.className = 'collection-item';
+
+  li.appendChild(document.createTextNode(task));
+
+  const link = document.createElement('a');
+
+  link.className = 'delete-item secondary-content';
+
+  link.innerHTML = '<i class="fa fa-remove"></i>'
+
+  li.appendChild(link); 
+
+  taskList.appendChild(li);
+  })
 }
 
 
@@ -52,19 +85,55 @@ const addTask = (e) => {
   //APPEND NEW LI ELEMENT TO UL
   taskList.appendChild(li);
 
+  //LOCAL STORAGE
+  storeTask(taskInput.value);
+
   //CLEAR INPUT
   taskInput.value = '';
   
   e.preventDefault();
 }
 
+//STORE TASK IN LOCAL STORAGE
+const storeTask = (task) => {
+  let tasks;
+
+  if(localStorage.getItem('tasks') === null){
+    tasks = [];
+  } else {
+    tasks = JSON.parse(localStorage.getItem('tasks'));
+  }
+
+  tasks.push(task);
+
+  localStorage.setItem('tasks', JSON.stringify(tasks));
+}
+
+
 
 //REMOVE TASK FUNCTION
 const removeTask = (e) => {
   if(e.target.parentElement.classList.contains('delete-item')){
     if(confirm('Are you sure you want to delte this task?')){e.target.parentElement.parentElement.remove();
+      removeTaskFromLocalStorage(e.target.parentElement.parentElement);
     }
   }
+}
+
+//REMOVE FROM LOCAL STORAGE
+const removeTaskFromLocalStorage = (taskItem) => {
+  if(localStorage.getItem('tasks') === null){
+    tasks = [];
+  } else {
+    tasks = JSON.parse(localStorage.getItem('tasks'));
+  }
+
+  tasks.forEach((task, index) =>{
+    if(taskItem.textContent === task){
+      tasks.splice(index, 1);
+    }
+  })
+localStorage.setItem('tasks', JSON.stringify(tasks));
 }
 
 //CLEAR ALL TASKS FUNCTION
@@ -72,6 +141,8 @@ const clearTasks = (e) => {
   while(taskList.firstChild){
     taskList.removeChild(taskList.firstChild);
   }
+
+  localStorage.clear();
 }
 
 //FILTER TASKS FUNCTION
